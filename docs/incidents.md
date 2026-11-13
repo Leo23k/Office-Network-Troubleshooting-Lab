@@ -1,6 +1,6 @@
 # Ca sự cố mạng
 
-Bốn ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
+Sáu ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
 
 ## Ca 1: Cổng switch bị shutdown
 
@@ -45,6 +45,28 @@ Bốn ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet
 | Chẩn đoán | Ping IP được nên mạng thông. `ipconfig` và `nslookup` cho thấy máy hỏi DNS server 192.168.10.99 không tồn tại |
 | Sửa | Chuyển PC1 về DHCP, nhận DNS 192.168.10.5 |
 | Kiểm tra lại | `nslookup intranet.local` trả về 192.168.10.5 |
+
+## Ca 5: Cổng switch gán sai VLAN
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | SW1: `interface fa0/6`, `switchport access vlan 20` (cổng của PC3) |
+| Triệu chứng | PC3 giữ IP 192.168.10.102 nhưng ping gateway 192.168.10.1 timeout 4/4 |
+| Phạm vi | 1 máy, các máy khác bình thường |
+| Chẩn đoán | `show vlan brief` trên SW1: Fa0/6 nằm trong VLAN 20 GUEST thay vì VLAN 10 OFFICE |
+| Sửa | `interface fa0/6`, `switchport access vlan 10` |
+| Kiểm tra lại | Fa0/6 về VLAN 10, ping gateway có Reply (2 gói đầu timeout trong lúc chờ ARP) |
+
+## Ca 6: Cáp đứt
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | Dùng công cụ Delete xóa dây PC3 tới SW1 |
+| Triệu chứng | PC3 mất mạng, sơ đồ không còn dây |
+| Phạm vi | 1 máy |
+| Chẩn đoán | `show interfaces status` trên SW1: Fa0/6 `notconnect` |
+| Sửa | Nối lại dây Copper Straight-Through từ PC3 FastEthernet0 tới SW1 Fa0/6 |
+| Kiểm tra lại | Fa0/6 `connected`, VLAN 10 |
 
 Ghi chú: đã thử đặt mask 255.255.255.252 cho PC1 nhưng Packet Tracer vẫn ping được gateway nên không tái hiện được lỗi, ca này không đưa vào.
 
