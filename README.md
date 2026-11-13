@@ -52,7 +52,7 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 | 6 | PC3 mất mạng do cáp đứt | `show interfaces status` thấy notconnect | Nối lại cáp |
 | 7 | VLAN GUEST không nhận DHCP do thiếu helper-address | PC4 báo DHCP request failed | Thêm lại `ip helper-address` trên g0/0.20 |
 
-Chi tiết từng ca và mẫu ticket: [docs/incidents.md](docs/incidents.md).
+Chi tiết từng ca và mẫu ticket: [docs/incidents.md](docs/incidents.md). Báo cáo tổng hợp: [docs/bao-cao-su-co.md](docs/bao-cao-su-co.md).
 
 ## Chưa làm
 
