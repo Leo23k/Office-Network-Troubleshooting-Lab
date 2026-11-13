@@ -1,6 +1,6 @@
 # Ca sự cố mạng
 
-Tám ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
+Mười một ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
 
 ## Ca 1: Cổng switch bị shutdown
 
@@ -90,9 +90,50 @@ Tám ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet 
 | Sửa | `interface g0/1`, `switchport mode trunk` |
 | Kiểm tra lại | `show interfaces trunk` thấy Gig0/1 trunking 802.1q. Ping 192.168.20.1 có Reply sau vài gói đầu timeout trong lúc cổng ổn định lại |
 
+## Ca 9: Gateway cấu hình sai
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | PC1 đặt IP tĩnh 192.168.10.50, mask 255.255.255.0, gateway 192.168.10.254, DNS 192.168.10.5 |
+| Triệu chứng | Ping máy in 192.168.10.20 (cùng VLAN) được 4/4, ping 192.168.20.1 (VLAN khác) timeout 4/4 |
+| Phạm vi | 1 máy, chỉ mất liên lạc ra ngoài VLAN |
+| Chẩn đoán | `ipconfig` thấy gateway 192.168.10.254, không phải 192.168.10.1 của R1. Ping được trong VLAN nên cổng và cáp ổn |
+| Sửa | Chuyển PC1 về DHCP, nhận gateway 192.168.10.1 |
+| Kiểm tra lại | PC1 nhận 192.168.10.103, gateway 192.168.10.1, DNS 192.168.10.5 |
+
+Ảnh: [lỗi](../screenshots/21-ca9-wrong-gateway.png), [sau khi sửa](../screenshots/22-ca9-gateway-fixed-dhcp.png).
+
+## Ca 10: Wi-Fi sai passphrase
+
+Mạng Wi-Fi: Access Point0 nối Fa0/9 (VLAN 20), SSID GUEST-WIFI, bảo mật WPA2-PSK. Smartphone0 kết nối và nhận IP từ pool GUEST.
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | Nhập sai passphrase trên Smartphone0 |
+| Triệu chứng | Điện thoại không nhận được IP, không dùng được mạng |
+| Phạm vi | 1 máy khách Wi-Fi |
+| Chẩn đoán | SSID đúng, WPA2-PSK đúng, chỉ có passphrase không khớp với cấu hình Access Point |
+| Sửa | Nhập đúng passphrase, xin lại IP bằng DHCP |
+| Kiểm tra lại | Smartphone0 nhận 192.168.20.104, mask 255.255.255.0 |
+
+Ảnh: [lỗi](../screenshots/24-ca10-wifi-wrong-passphrase.png), [sau khi sửa](../screenshots/25-ca10-wifi-fixed.png). Ảnh sau khi cấu hình lần đầu: [23-wifi-smartphone-dhcp.png](../screenshots/23-wifi-smartphone-dhcp.png). Passphrase đã được che trong ảnh.
+
+## Ca 11: Wi-Fi sai SSID
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | Đổi SSID trên Smartphone0 thành GUEST-WIF (thiếu một ký tự) |
+| Triệu chứng | Điện thoại không nhận được IP |
+| Phạm vi | 1 máy khách Wi-Fi |
+| Chẩn đoán | So tên SSID trên điện thoại với SSID của Access Point (GUEST-WIFI), thấy khác nhau |
+| Sửa | Đặt lại SSID GUEST-WIFI, xin lại IP |
+| Kiểm tra lại | Smartphone0 nhận lại 192.168.20.104 |
+
+Ảnh lỗi: [26-ca11-wifi-wrong-ssid.png](../screenshots/26-ca11-wifi-wrong-ssid.png).
+
 ## Kiểm tra đường đi bằng tracert
 
-`tracert 192.168.10.5` từ PC4 (VLAN 20): chặng 1 là 192.168.20.1 (R1, sub-interface g0/0.20), chặng 2 là 192.168.10.5 (SRV1). Gói đi qua router đúng một lần, khớp với mô hình router-on-a-stick.
+`tracert 192.168.10.5` từ PC4 (VLAN 20): chặng 1 là 192.168.20.1 (R1, sub-interface g0/0.20), chặng 2 là 192.168.10.5 (SRV1). Gói đi qua router đúng một lần, khớp với mô hình router-on-a-stick. Ảnh: [20-tracert-pc4.png](../screenshots/20-tracert-pc4.png).
 
 Ghi chú: đã thử đặt mask 255.255.255.252 cho PC1 nhưng Packet Tracer vẫn ping được gateway nên không tái hiện được lỗi, ca này không đưa vào.
 
