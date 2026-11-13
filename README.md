@@ -34,12 +34,13 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 - PC1 nhận DHCP đúng: 192.168.10.100, gateway 192.168.10.1, DNS 192.168.10.5.
 - PC1 ping được 192.168.20.1 (gateway VLAN 20) và 192.168.10.20 (máy in), đều 4/4 gói.
 - `nslookup intranet.local` trên PC1 trả về 192.168.10.5.
+- PC2 và PC3 nhận pool OFFICE: 192.168.10.101 và 192.168.10.102, gateway 192.168.10.1.
+- PC4 và PC5 nhận pool GUEST qua DHCP relay: 192.168.20.100 và 192.168.20.101, gateway 192.168.20.1, DNS 192.168.10.5.
 
 Ảnh: [08-pc1-tests.png](screenshots/08-pc1-tests.png).
 
 ## Chưa làm
 
-- Kiểm tra DHCP trên PC2 đến PC5. Đặc biệt PC4 và PC5 cần nhận đúng pool GUEST.
 - 10 lỗi mạng, mỗi lỗi có gây lỗi, triệu chứng, chẩn đoán, sửa và kiểm tra lại.
 - Ca máy in offline khi IP của PRN1 đổi sang .77.
 
