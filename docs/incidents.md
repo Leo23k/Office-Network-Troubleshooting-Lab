@@ -1,6 +1,6 @@
 # Ca sự cố mạng
 
-Ba ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
+Bốn ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
 
 ## Ca 1: Cổng switch bị shutdown
 
@@ -34,6 +34,19 @@ Ba ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tr
 | Chẩn đoán | Cổng và VLAN đúng. `ping 192.168.10.77` có Reply, tức máy in còn sống nhưng đổi IP |
 | Sửa | Đặt lại IP cố định 192.168.10.20 cho PRN1 |
 | Kiểm tra lại | `ping 192.168.10.20` từ PC1 có Reply 4/4 |
+
+## Ca 4: DNS cấu hình sai
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | PC1 đặt IP tĩnh 192.168.10.50, mask 255.255.255.0, gateway 192.168.10.1, DNS 192.168.10.99 |
+| Triệu chứng | Ping gateway và máy in được, nhưng `nslookup intranet.local` báo `DNS request timed out` |
+| Phạm vi | 1 máy |
+| Chẩn đoán | Ping IP được nên mạng thông. `ipconfig` và `nslookup` cho thấy máy hỏi DNS server 192.168.10.99 không tồn tại |
+| Sửa | Chuyển PC1 về DHCP, nhận DNS 192.168.10.5 |
+| Kiểm tra lại | `nslookup intranet.local` trả về 192.168.10.5 |
+
+Ghi chú: đã thử đặt mask 255.255.255.252 cho PC1 nhưng Packet Tracer vẫn ping được gateway nên không tái hiện được lỗi, ca này không đưa vào.
 
 Mẫu ticket cho ca 3:
 

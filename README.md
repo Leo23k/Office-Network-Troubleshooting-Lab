@@ -1,6 +1,6 @@
 # Mạng văn phòng nhỏ trên Cisco Packet Tracer
 
-**Trạng thái: đang làm.** Phần dựng mạng, VLAN, định tuyến giữa VLAN, IP tĩnh, DHCP và DNS đã xong và đã kiểm tra. Ba ca sự cố (cổng shutdown, ACL chặn nhầm, máy in offline) đã xử lý. Phần còn lại ghi ở mục Chưa làm.
+**Trạng thái: đang làm.** Phần dựng mạng, VLAN, định tuyến giữa VLAN, IP tĩnh, DHCP và DNS đã xong và đã kiểm tra. Bốn ca sự cố (cổng shutdown, ACL chặn nhầm, máy in offline, DNS sai) đã xử lý. Phần còn lại ghi ở mục Chưa làm.
 
 Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, và một máy in dùng IP tĩnh.
 
@@ -46,12 +46,13 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 | 1 | PC2 mất mạng do cổng Fa0/5 bị shutdown | `show interfaces status` thấy disabled | `no shutdown` |
 | 2 | VLAN GUEST không vào được web do ACL chặn nhầm | `show access-lists` thấy dòng deny có match | Gỡ ACL khỏi g0/0.20 |
 | 3 | Máy in offline do đổi IP sang .77 | Ping .20 mất gói, ping .77 có Reply | Đặt lại IP .20 |
+| 4 | Không phân giải được tên do DNS sai (.99) | Ping IP được, nslookup timeout | Về DHCP, DNS .5 |
 
 Chi tiết từng ca và mẫu ticket: [docs/incidents.md](docs/incidents.md).
 
 ## Chưa làm
 
-- Các lỗi mạng còn lại ngoài ba ca đã ghi trong [docs/incidents.md](docs/incidents.md).
+- Các lỗi mạng còn lại ngoài bốn ca đã ghi trong [docs/incidents.md](docs/incidents.md).
 
 ## Ghi chú
 
