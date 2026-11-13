@@ -1,6 +1,6 @@
 # Mạng văn phòng nhỏ trên Cisco Packet Tracer
 
-**Trạng thái: đang làm.** Phần dựng mạng, VLAN, định tuyến giữa VLAN, IP tĩnh, DHCP và DNS đã xong và đã kiểm tra. Bảy ca sự cố (cổng shutdown, ACL chặn nhầm, máy in offline, DNS sai, sai VLAN, cáp đứt, thiếu DHCP relay) đã xử lý. Phần còn lại ghi ở mục Chưa làm.
+**Trạng thái: đang làm.** Phần dựng mạng, VLAN, định tuyến giữa VLAN, IP tĩnh, DHCP và DNS đã xong và đã kiểm tra. Tám ca sự cố (cổng shutdown, ACL chặn nhầm, máy in offline, DNS sai, sai VLAN, cáp đứt, thiếu DHCP relay, trunk sai) đã xử lý. Phần còn lại ghi ở mục Chưa làm.
 
 Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, và một máy in dùng IP tĩnh.
 
@@ -51,12 +51,13 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 | 5 | PC3 mất mạng do cổng Fa0/6 sai VLAN | `show vlan brief` thấy Fa0/6 ở VLAN 20 | Đặt lại VLAN 10 |
 | 6 | PC3 mất mạng do cáp đứt | `show interfaces status` thấy notconnect | Nối lại cáp |
 | 7 | VLAN GUEST không nhận DHCP do thiếu helper-address | PC4 báo DHCP request failed | Thêm lại `ip helper-address` trên g0/0.20 |
+| 8 | Mất liên lạc với router do trunk bị đặt mode access | `show interfaces trunk` trống | `switchport mode trunk` |
 
 Chi tiết từng ca và mẫu ticket: [docs/incidents.md](docs/incidents.md). Báo cáo tổng hợp: [docs/bao-cao-su-co.md](docs/bao-cao-su-co.md).
 
 ## Chưa làm
 
-- Các lỗi mạng còn lại ngoài bảy ca đã ghi trong [docs/incidents.md](docs/incidents.md).
+- Các lỗi mạng còn lại ngoài tám ca đã ghi trong [docs/incidents.md](docs/incidents.md).
 
 ## Ghi chú
 

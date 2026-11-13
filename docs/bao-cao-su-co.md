@@ -2,7 +2,7 @@
 
 ## Tóm tắt
 
-Trên mạng lab gồm router R1, switch SW1, máy chủ SRV1, máy in PRN1 và 5 máy trạm, đã gây và xử lý 7 sự cố. Tất cả được chẩn đoán bằng lệnh kiểm tra, sửa và kiểm tra lại. Mỗi sự cố chỉ ảnh hưởng một máy, một thiết bị hoặc một VLAN.
+Trên mạng lab gồm router R1, switch SW1, máy chủ SRV1, máy in PRN1 và 5 máy trạm, đã gây và xử lý 8 sự cố. Tất cả được chẩn đoán bằng lệnh kiểm tra, sửa và kiểm tra lại. Mỗi sự cố chỉ ảnh hưởng một máy, một thiết bị hoặc một VLAN.
 
 ## Bảng tổng hợp
 
@@ -15,12 +15,14 @@ Trên mạng lab gồm router R1, switch SW1, máy chủ SRV1, máy in PRN1 và 
 | 5 | Cổng Fa0/6 sai VLAN | PC3 | Ping gateway timeout | `show vlan brief` | Đặt lại VLAN 10 |
 | 6 | Cáp PC3 đứt | PC3 | PC3 mất mạng, sơ đồ không có dây | `show interfaces status` | Nối lại cáp |
 | 7 | Thiếu DHCP relay trên g0/0.20 | VLAN 20 | PC4 báo DHCP request failed | Xem cấu hình g0/0.20 | Thêm `ip helper-address` |
+| 8 | Trunk Gig0/1 bị đặt mode access | Cả hai VLAN | Ping gateway VLAN 20 timeout | `show interfaces trunk`, `show vlan brief` | `switchport mode trunk` |
 
 ## Cách phân biệt nhanh
 
 - Một máy mất mạng, các máy khác bình thường: kiểm tra cáp, cổng switch (shutdown, sai VLAN) và cấu hình IP của máy đó. Sự cố 1, 4, 5, 6.
 - Một thiết bị không tới được dù cổng và VLAN đúng: kiểm tra IP của thiết bị, ping thử IP khác. Sự cố 3.
 - Cả một VLAN lỗi: kiểm tra router, ACL và DHCP relay. Sự cố 2, 7.
+- Cả hai VLAN mất liên lạc với router: kiểm tra đường trunk giữa switch và router. Sự cố 8.
 - Ping IP được nhưng gõ tên không được: lỗi DNS. Sự cố 4.
 
 ## Thứ tự kiểm tra đề xuất

@@ -1,6 +1,6 @@
 # Ca sự cố mạng
 
-Bảy ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
+Tám ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
 
 ## Ca 1: Cổng switch bị shutdown
 
@@ -78,6 +78,17 @@ Bảy ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet
 | Chẩn đoán | Máy ở VLAN khác với máy chủ DHCP nên cần relay trên sub-interface g0/0.20. Lệnh `ip helper-address` đã bị gỡ |
 | Sửa | `interface g0/0.20`, `ip helper-address 192.168.10.5`, `write` |
 | Kiểm tra lại | PC4 nhận 192.168.20.102, gateway 192.168.20.1, DNS 192.168.10.5 |
+
+## Ca 8: Trunk giữa switch và router bị đặt sai
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | SW1: `interface g0/1`, `switchport mode access` |
+| Triệu chứng | PC1 ping 192.168.20.1 timeout 4/4. Mọi VLAN mất liên lạc với router |
+| Phạm vi | Cả hai VLAN, mất định tuyến giữa các VLAN |
+| Chẩn đoán | `show interfaces trunk` không còn cổng nào, `show vlan brief` thấy Gig0/1 nằm trong VLAN 1 như cổng thường |
+| Sửa | `interface g0/1`, `switchport mode trunk` |
+| Kiểm tra lại | `show interfaces trunk` thấy Gig0/1 trunking 802.1q. Ping 192.168.20.1 có Reply sau vài gói đầu timeout trong lúc cổng ổn định lại |
 
 ## Kiểm tra đường đi bằng tracert
 
