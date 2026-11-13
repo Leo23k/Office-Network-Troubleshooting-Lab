@@ -1,6 +1,6 @@
 # Mạng văn phòng nhỏ trên Cisco Packet Tracer
 
-Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, một máy in dùng IP tĩnh và một access point Wi-Fi cho khách. Có 11 ca sự cố đã gây, chẩn đoán và sửa, kèm ảnh và báo cáo.
+Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, một máy in dùng IP tĩnh và một access point Wi-Fi cho khách. Có 11 ca sự cố đã gây, chẩn đoán và sửa, kèm ảnh và báo cáo (ca 7 chưa có ảnh).
 
 **[Báo cáo sự cố](docs/bao-cao-su-co.md) · [Chi tiết 11 ca](docs/incidents.md) · [File Packet Tracer](office-network.pkt)**
 
@@ -49,11 +49,11 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 | # | Sự cố | Chẩn đoán | Sửa |
 |---|---|---|---|
 | 1 | PC2 mất mạng do cổng Fa0/5 bị shutdown ([ảnh](screenshots/11-ca1-port-disabled.png)) | `show interfaces status` thấy disabled | `no shutdown` |
-| 2 | VLAN GUEST không vào được web do ACL chặn nhầm | `show access-lists` thấy dòng deny có match | Gỡ ACL khỏi g0/0.20 |
-| 3 | Máy in offline do đổi IP sang .77 | Ping .20 mất gói, ping .77 có Reply | Đặt lại IP .20 |
-| 4 | Không phân giải được tên do DNS sai (.99) | Ping IP được, nslookup timeout | Về DHCP, DNS .5 |
+| 2 | VLAN GUEST không vào được web do ACL chặn nhầm ([ảnh lỗi](screenshots/10-ca2-acl-web-timeout.png)) | `show access-lists` thấy dòng deny có match ([ảnh](screenshots/10b-ca2-show-access-lists.png)) | Gỡ ACL khỏi g0/0.20 ([ảnh](screenshots/10c-ca2-web-ok.png)) |
+| 3 | Máy in offline do đổi IP sang .77 ([ảnh lỗi](screenshots/12-ca3-printer-offline.png)) | Ping .20 mất gói, ping .77 có Reply | Đặt lại IP .20 ([ảnh](screenshots/13-ca3-printer-fixed.png)) |
+| 4 | Không phân giải được tên do DNS sai (.99) ([ảnh lỗi](screenshots/14-ca4-dns-wrong.png)) | Ping IP được, nslookup timeout | Về DHCP, DNS .5 ([ảnh](screenshots/14b-ca4-dns-fixed.png)) |
 | 5 | PC3 mất mạng do cổng Fa0/6 sai VLAN ([ảnh](screenshots/15-ca5-wrong-vlan.png)) | `show vlan brief` thấy Fa0/6 ở VLAN 20 | Đặt lại VLAN 10 |
-| 6 | PC3 mất mạng do cáp đứt | `show interfaces status` thấy notconnect | Nối lại cáp |
+| 6 | PC3 mất mạng do cáp đứt ([ảnh lỗi](screenshots/16-ca6-cable-removed.png)) | `show interfaces status` thấy notconnect ([ảnh](screenshots/17-ca6-fa0-6-notconnect.png)) | Nối lại cáp |
 | 7 | VLAN GUEST không nhận DHCP do thiếu helper-address | PC4 báo DHCP request failed | Thêm lại `ip helper-address` trên g0/0.20 |
 | 8 | Mất liên lạc với router do trunk bị đặt mode access ([ảnh lỗi](screenshots/18-ca8-trunk-access.png), [ảnh đã sửa](screenshots/19-trunk-ok.png)) | `show interfaces trunk` trống | `switchport mode trunk` |
 | 9 | Ra khỏi VLAN không được do gateway cấu hình sai (.254) ([ảnh](screenshots/21-ca9-wrong-gateway.png)) | Ping máy cùng VLAN được, ping 192.168.20.1 timeout, `ipconfig` thấy gateway lạ | Về DHCP, gateway 192.168.10.1 ([ảnh](screenshots/22-ca9-gateway-fixed-dhcp.png)) |
@@ -64,7 +64,7 @@ Chi tiết từng ca và mẫu ticket: [docs/incidents.md](docs/incidents.md). B
 
 ## Ghi chú
 
-Packet Tracer không tái hiện được lỗi sai subnet mask (đặt 255.255.255.252 vẫn ping được gateway) nên lỗi này không đưa vào. Ca ACL, cáp đứt, máy in offline và DNS sai chưa có ảnh, chỉ có mô tả lệnh và kết quả trong [docs/incidents.md](docs/incidents.md).
+Packet Tracer không tái hiện được lỗi sai subnet mask (đặt 255.255.255.252 vẫn ping được gateway) nên lỗi này không đưa vào. Lỗi IP trùng chưa làm.
 
 Pool `serverPool` mặc định của SRV1 không xóa được qua giao diện Packet Tracer. Pool này được để lại với gateway 192.168.10.1, DNS 192.168.10.5 và dải bắt đầu từ 192.168.10.200, nên không đụng vùng OFFICE.
 
