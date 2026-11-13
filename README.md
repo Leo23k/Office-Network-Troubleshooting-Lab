@@ -1,6 +1,6 @@
 # Mạng văn phòng nhỏ trên Cisco Packet Tracer
 
-Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, một máy in dùng IP tĩnh và một access point Wi-Fi cho khách. Có 11 ca sự cố đã gây, chẩn đoán và sửa, kèm ảnh và báo cáo (ca 7 chưa có ảnh).
+Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, một máy in dùng IP tĩnh và một access point Wi-Fi cho khách. Có 11 ca sự cố đã gây, chẩn đoán và sửa, kèm ảnh và báo cáo.
 
 **[Báo cáo sự cố](docs/bao-cao-su-co.md) · [Chi tiết 11 ca](docs/incidents.md) · [File Packet Tracer](office-network.pkt)**
 
@@ -54,7 +54,7 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 | 4 | Không phân giải được tên do DNS sai (.99) ([ảnh lỗi](screenshots/14-ca4-dns-wrong.png)) | Ping IP được, nslookup timeout | Về DHCP, DNS .5 ([ảnh](screenshots/14b-ca4-dns-fixed.png)) |
 | 5 | PC3 mất mạng do cổng Fa0/6 sai VLAN ([ảnh](screenshots/15-ca5-wrong-vlan.png)) | `show vlan brief` thấy Fa0/6 ở VLAN 20 | Đặt lại VLAN 10 |
 | 6 | PC3 mất mạng do cáp đứt ([ảnh lỗi](screenshots/16-ca6-cable-removed.png)) | `show interfaces status` thấy notconnect ([ảnh](screenshots/17-ca6-fa0-6-notconnect.png)) | Nối lại cáp |
-| 7 | VLAN GUEST không nhận DHCP do thiếu helper-address | PC4 báo DHCP request failed | Thêm lại `ip helper-address` trên g0/0.20 |
+| 7 | VLAN GUEST không nhận DHCP do thiếu helper-address ([ảnh lỗi](screenshots/27-ca7-dhcp-failed.png)) | PC4 báo DHCP request failed | Thêm lại `ip helper-address` trên g0/0.20 ([ảnh](screenshots/28-ca7-dhcp-fixed.png)) |
 | 8 | Mất liên lạc với router do trunk bị đặt mode access ([ảnh lỗi](screenshots/18-ca8-trunk-access.png), [ảnh đã sửa](screenshots/19-trunk-ok.png)) | `show interfaces trunk` trống | `switchport mode trunk` |
 | 9 | Ra khỏi VLAN không được do gateway cấu hình sai (.254) ([ảnh](screenshots/21-ca9-wrong-gateway.png)) | Ping máy cùng VLAN được, ping 192.168.20.1 timeout, `ipconfig` thấy gateway lạ | Về DHCP, gateway 192.168.10.1 ([ảnh](screenshots/22-ca9-gateway-fixed-dhcp.png)) |
 | 10 | Điện thoại không vào được Wi-Fi do sai passphrase ([ảnh](screenshots/24-ca10-wifi-wrong-passphrase.png)) | Wi-Fi không cấp được IP, so lại passphrase với AP | Nhập đúng passphrase ([ảnh](screenshots/25-ca10-wifi-fixed.png)) |
