@@ -1,6 +1,6 @@
 # Ca sự cố mạng
 
-Sáu ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
+Bảy ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet Tracer.
 
 ## Ca 1: Cổng switch bị shutdown
 
@@ -67,6 +67,21 @@ Sáu ca đã gây lỗi, chẩn đoán, sửa và kiểm tra lại trên Packet 
 | Chẩn đoán | `show interfaces status` trên SW1: Fa0/6 `notconnect` |
 | Sửa | Nối lại dây Copper Straight-Through từ PC3 FastEthernet0 tới SW1 Fa0/6 |
 | Kiểm tra lại | Fa0/6 `connected`, VLAN 10 |
+
+## Ca 7: VLAN GUEST không nhận được DHCP
+
+| Mục | Nội dung |
+|---|---|
+| Gây lỗi | R1: `interface g0/0.20`, `no ip helper-address 192.168.10.5` |
+| Triệu chứng | PC4 chọn DHCP báo `DHCP request failed`, không có IP, gateway 0.0.0.0 |
+| Phạm vi | Cả VLAN 20 (máy mới hoặc máy xin lại IP), VLAN 10 vẫn bình thường |
+| Chẩn đoán | Máy ở VLAN khác với máy chủ DHCP nên cần relay trên sub-interface g0/0.20. Lệnh `ip helper-address` đã bị gỡ |
+| Sửa | `interface g0/0.20`, `ip helper-address 192.168.10.5`, `write` |
+| Kiểm tra lại | PC4 nhận 192.168.20.102, gateway 192.168.20.1, DNS 192.168.10.5 |
+
+## Kiểm tra đường đi bằng tracert
+
+`tracert 192.168.10.5` từ PC4 (VLAN 20): chặng 1 là 192.168.20.1 (R1, sub-interface g0/0.20), chặng 2 là 192.168.10.5 (SRV1). Gói đi qua router đúng một lần, khớp với mô hình router-on-a-stick.
 
 Ghi chú: đã thử đặt mask 255.255.255.252 cho PC1 nhưng Packet Tracer vẫn ping được gateway nên không tái hiện được lỗi, ca này không đưa vào.
 

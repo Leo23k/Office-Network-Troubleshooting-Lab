@@ -1,6 +1,6 @@
 # Mạng văn phòng nhỏ trên Cisco Packet Tracer
 
-**Trạng thái: đang làm.** Phần dựng mạng, VLAN, định tuyến giữa VLAN, IP tĩnh, DHCP và DNS đã xong và đã kiểm tra. Sáu ca sự cố (cổng shutdown, ACL chặn nhầm, máy in offline, DNS sai, sai VLAN, cáp đứt) đã xử lý. Phần còn lại ghi ở mục Chưa làm.
+**Trạng thái: đang làm.** Phần dựng mạng, VLAN, định tuyến giữa VLAN, IP tĩnh, DHCP và DNS đã xong và đã kiểm tra. Bảy ca sự cố (cổng shutdown, ACL chặn nhầm, máy in offline, DNS sai, sai VLAN, cáp đứt, thiếu DHCP relay) đã xử lý. Phần còn lại ghi ở mục Chưa làm.
 
 Dự án mô phỏng một mạng văn phòng nhỏ có hai VLAN: VLAN 10 cho nhân viên và VLAN 20 cho khách. Mạng có máy chủ nội bộ chạy DHCP và DNS, và một máy in dùng IP tĩnh.
 
@@ -35,6 +35,7 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 - PC1 ping được 192.168.20.1 (gateway VLAN 20) và 192.168.10.20 (máy in), đều 4/4 gói.
 - `nslookup intranet.local` trên PC1 trả về 192.168.10.5.
 - PC2 và PC3 nhận pool OFFICE: 192.168.10.101 và 192.168.10.102, gateway 192.168.10.1.
+- `tracert 192.168.10.5` từ PC4: chặng 1 là 192.168.20.1, chặng 2 là 192.168.10.5.
 - PC4 và PC5 nhận pool GUEST qua DHCP relay: 192.168.20.100 và 192.168.20.101, gateway 192.168.20.1, DNS 192.168.10.5.
 
 Ảnh: [08-pc1-tests.png](screenshots/08-pc1-tests.png).
@@ -49,12 +50,13 @@ SRV1 có hai pool DHCP. Pool OFFICE cấp từ 192.168.10.100, gateway 192.168.1
 | 4 | Không phân giải được tên do DNS sai (.99) | Ping IP được, nslookup timeout | Về DHCP, DNS .5 |
 | 5 | PC3 mất mạng do cổng Fa0/6 sai VLAN | `show vlan brief` thấy Fa0/6 ở VLAN 20 | Đặt lại VLAN 10 |
 | 6 | PC3 mất mạng do cáp đứt | `show interfaces status` thấy notconnect | Nối lại cáp |
+| 7 | VLAN GUEST không nhận DHCP do thiếu helper-address | PC4 báo DHCP request failed | Thêm lại `ip helper-address` trên g0/0.20 |
 
 Chi tiết từng ca và mẫu ticket: [docs/incidents.md](docs/incidents.md).
 
 ## Chưa làm
 
-- Các lỗi mạng còn lại ngoài sáu ca đã ghi trong [docs/incidents.md](docs/incidents.md).
+- Các lỗi mạng còn lại ngoài bảy ca đã ghi trong [docs/incidents.md](docs/incidents.md).
 
 ## Ghi chú
 
